@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  item-app:
+    # ambil image dari registry
+    image: node:14
+    # membuat environment aplikasi & host database
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=172.17.0.1
+    # install dependency & proses build 
+    command: sh -c "npm install --production --unsafe-perm && npm run build"
+    # membuka port apliaksi
+    ports:
+      - 80:8080
+    # menentukan direktori aplikasi
+    working_dir: /app
+    # membuat volume aplikasi
+    volumes:
+      - ./:/app
+    # membutuhkan ketergantungan service database
+    depends_on:
+      - item-db
+    # menjalankan aplikasi
+    command: sh -c "npm start"
+    # menghidupkan service setiap container dijalankan
+    restart: always
+
+  item-db:
+    # ambil image dari registry
+    image: mongo:3
+    # membuat nama container
+    container_name: item-db
+    ports:
+      - 27017:27017
+    # buat volume untuk database mongo
+    volumes:
+      - app-db:/data/db
+    # menghidupkan service setiap container dijalankan
+    restart: always
+
+# membuat volume
+volumes:
+  app-db:
