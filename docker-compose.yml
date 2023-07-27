@@ -3,26 +3,13 @@ version: "3.7"
 services:
   item-app:
     # ambil image dari registry
-    image: node:14
-    # membuat environment aplikasi & host database
-    environment:
-      - NODE_ENV=production
-      - DB_HOST=172.17.0.1
-    # install dependency & proses build 
-    command: sh -c "npm install --production --unsafe-perm && npm run build"
-    # membuka port apliaksi
+    image: thinkfather/item-app:v1
+    container_name: item-app
     ports:
       - 80:8080
-    # menentukan direktori aplikasi
-    working_dir: /app
-    # membuat volume aplikasi
-    volumes:
-      - ./:/app
     # membutuhkan ketergantungan service database
     depends_on:
       - item-db
-    # menjalankan aplikasi
-    command: sh -c "npm start"
     # menghidupkan service setiap container dijalankan
     restart: always
 
